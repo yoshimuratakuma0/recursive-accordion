@@ -27,7 +27,9 @@ fun <T> RecursiveAccordion(
     showLevelGuide: Boolean = true,
     levelGuideWidth: Dp = 1.dp,
     levelGuideColor: Color = Color(0xFFE0E0E0),
-    action: @Composable (RecursiveItem<T>) -> Unit = {},
+    expandedIds: Set<String> = emptySet(),
+    onToggle: (RecursiveItem<T>) -> Unit = {},
+    action: @Composable (RecursiveItem<T>, Boolean, () -> Unit) -> Unit = { _, _, _ -> },
     content: @Composable (RecursiveItem<T>) -> Unit,
 ) {
     InnerRecursiveAccordion(
@@ -39,6 +41,8 @@ fun <T> RecursiveAccordion(
         showLevelGuide = showLevelGuide,
         levelGuideWidth = levelGuideWidth,
         levelGuideColor = levelGuideColor,
+        expandedIds = expandedIds,
+        onToggle = onToggle,
         action = action,
         content = content,
     )
@@ -54,9 +58,13 @@ internal fun <T> InnerRecursiveAccordion(
     showLevelGuide: Boolean,
     levelGuideWidth: Dp,
     levelGuideColor: Color,
-    action: @Composable (RecursiveItem<T>) -> Unit,
+    expandedIds: Set<String>,
+    onToggle: (RecursiveItem<T>) -> Unit,
+    action: @Composable (RecursiveItem<T>, Boolean, () -> Unit) -> Unit,
     content: @Composable (RecursiveItem<T>) -> Unit,
 ) {
+    val isExpanded = item.id in expandedIds
+
     Column(
         modifier = modifier
             .padding(start = levelLeadingPadding * (level + 1)),
@@ -81,13 +89,13 @@ internal fun <T> InnerRecursiveAccordion(
                 content(item)
             }
             if (item.isExpandable) {
-                action.invoke(item)
+                action(item, isExpanded) { onToggle(item) }
             }
         }
 
         if (item.isExpandable) {
             val expandProgress by animateFloatAsState(
-                targetValue = if (item.expanded) 1f else 0f,
+                targetValue = if (isExpanded) 1f else 0f,
                 animationSpec = tween(durationMillis = animationDurationMillis),
                 label = "expandProgress"
             )
@@ -110,7 +118,7 @@ internal fun <T> InnerRecursiveAccordion(
                         }
                     }
             ) {
-                if (item.expanded || expandProgress > 0f) {
+                if (isExpanded || expandProgress > 0f) {
                     item.children.forEach { child ->
                         InnerRecursiveAccordion(
                             item = child,
@@ -121,6 +129,8 @@ internal fun <T> InnerRecursiveAccordion(
                             showLevelGuide = showLevelGuide,
                             levelGuideWidth = levelGuideWidth,
                             levelGuideColor = levelGuideColor,
+                            expandedIds = expandedIds,
+                            onToggle = onToggle,
                             action = action,
                             content = content,
                         )
