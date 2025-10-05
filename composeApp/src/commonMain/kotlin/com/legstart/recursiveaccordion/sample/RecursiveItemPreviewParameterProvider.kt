@@ -1,6 +1,21 @@
 package com.legstart.recursiveaccordion.sample
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.BasicText
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.legstart.recursive_item.RecursiveAccordion
 import com.legstart.recursive_item.RecursiveItem
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 
 typealias RecursiveItemWithLabel = Pair<String, RecursiveItem<Fruit>>
@@ -60,4 +75,44 @@ val sampleItems = itemsWithLabel.map { it.second }
 class RecursivePreviewParameterProvider : PreviewParameterProvider<RecursiveItemWithLabel> {
     override val values: Sequence<RecursiveItemWithLabel> =
         sequenceOf(*itemsWithLabel.toTypedArray())
+}
+
+@Preview
+@Composable
+fun RecursiveItemPreview(
+    @PreviewParameter(RecursivePreviewParameterProvider::class) itemWithLabel: RecursiveItemWithLabel
+) {
+    Surface {
+        val (label, item) = itemWithLabel
+        Column {
+            BasicText(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .align(Alignment.CenterHorizontally),
+                text = label,
+                style = TextStyle(
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                ),
+            )
+
+            HorizontalDivider()
+
+            RecursiveAccordion(
+                item = item,
+                levelLeadingPadding = 16.dp,
+                action = { current ->
+                    SampleAction(
+                        isExpanded = current.expanded,
+                        onClick = { current.expanded = !current.expanded },
+                    )
+                }
+            ) { current ->
+                SampleContent(
+                    item = current,
+                    modifier = Modifier,
+                )
+            }
+        }
+    }
 }
