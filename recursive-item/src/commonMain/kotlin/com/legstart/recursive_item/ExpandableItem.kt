@@ -1,22 +1,21 @@
 package com.legstart.recursive_item
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.FiniteAnimationSpec
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -48,16 +47,14 @@ fun <T> RecursiveAccordion(
 @Composable
 internal fun <T> InnerRecursiveAccordion(
     item: RecursiveItem<T>,
-    level: Int = 0,
+    level: Int,
     levelLeadingPadding: Dp,
     modifier: Modifier = Modifier,
-    animationDurationMillis: Int = 250,
-    expandFrom: Alignment.Vertical = Alignment.Top,
-    shrinkTowards: Alignment.Vertical = Alignment.Top,
-    showLevelGuide: Boolean = true,
-    levelGuideWidth: Dp = 1.dp,
-    levelGuideColor: Color = Color(0xFFE0E0E0),
-    action: @Composable (RecursiveItem<T>) -> Unit = {},
+    animationDurationMillis: Int,
+    showLevelGuide: Boolean,
+    levelGuideWidth: Dp,
+    levelGuideColor: Color,
+    action: @Composable (RecursiveItem<T>) -> Unit,
     content: @Composable (RecursiveItem<T>) -> Unit,
 ) {
     Column(
@@ -89,14 +86,31 @@ internal fun <T> InnerRecursiveAccordion(
         }
 
         if (item.isExpandable) {
-            val enterSpec: FiniteAnimationSpec<IntSize> = tween(animationDurationMillis)
-            val exitSpec: FiniteAnimationSpec<IntSize> = tween(animationDurationMillis)
-            AnimatedVisibility(
-                visible = item.expanded,
-                enter = expandVertically(animationSpec = enterSpec, expandFrom = expandFrom),
-                exit = shrinkVertically(animationSpec = exitSpec, shrinkTowards = shrinkTowards),
+            val expandProgress by animateFloatAsState(
+                targetValue = if (item.expanded) 1f else 0f,
+                animationSpec = tween(durationMillis = animationDurationMillis),
+                label = "expandProgress"
+            )
+
+            Column(
+                modifier = Modifier
+                    .graphicsLayer {
+                        alpha = expandProgress
+                        scaleY = expandProgress
+                        transformOrigin = androidx.compose.ui.graphics.TransformOrigin(
+                            pivotFractionX = 0.5f,
+                            pivotFractionY = 0f,
+                        )
+                    }
+                    .layout { measurable, constraints ->
+                        val placeable = measurable.measure(constraints)
+                        val height = (placeable.height * expandProgress).toInt()
+                        layout(placeable.width, height) {
+                            placeable.placeRelative(0, 0)
+                        }
+                    }
             ) {
-                Column {
+                if (item.expanded || expandProgress > 0f) {
                     item.children.forEach { child ->
                         InnerRecursiveAccordion(
                             item = child,
@@ -104,8 +118,6 @@ internal fun <T> InnerRecursiveAccordion(
                             levelLeadingPadding = levelLeadingPadding,
                             modifier = modifier,
                             animationDurationMillis = animationDurationMillis,
-                            expandFrom = expandFrom,
-                            shrinkTowards = shrinkTowards,
                             showLevelGuide = showLevelGuide,
                             levelGuideWidth = levelGuideWidth,
                             levelGuideColor = levelGuideColor,
