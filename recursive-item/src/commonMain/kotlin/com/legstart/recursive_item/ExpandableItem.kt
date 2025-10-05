@@ -29,7 +29,7 @@ fun <T> RecursiveAccordion(
     levelGuideColor: Color = Color(0xFFE0E0E0),
     expandedIds: Set<String> = emptySet(),
     onToggle: (RecursiveItem<T>) -> Unit = {},
-    action: @Composable (RecursiveItem<T>, Boolean, () -> Unit) -> Unit = { _, _, _ -> },
+    action: @Composable (RecursiveItem<T>, () -> Unit) -> Unit = { _, _ -> },
     content: @Composable (RecursiveItem<T>) -> Unit,
 ) {
     InnerRecursiveAccordion(
@@ -60,7 +60,7 @@ internal fun <T> InnerRecursiveAccordion(
     levelGuideColor: Color,
     expandedIds: Set<String>,
     onToggle: (RecursiveItem<T>) -> Unit,
-    action: @Composable (RecursiveItem<T>, Boolean, () -> Unit) -> Unit,
+    action: @Composable (RecursiveItem<T>, () -> Unit) -> Unit,
     content: @Composable (RecursiveItem<T>) -> Unit,
 ) {
     val isExpanded = item.id in expandedIds
@@ -89,7 +89,7 @@ internal fun <T> InnerRecursiveAccordion(
                 content(item)
             }
             if (item.isExpandable) {
-                action(item, isExpanded) { onToggle(item) }
+                action(item) { onToggle(item) }
             }
         }
 

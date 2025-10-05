@@ -103,7 +103,7 @@ kotlin {
 
 }
 
-val artifactVersion: String = "1.0.1"
+val artifactVersion: String = "1.0.2"
 mavenPublishing {
     coordinates("com.legstart", "recursive-accordion", artifactVersion)
 

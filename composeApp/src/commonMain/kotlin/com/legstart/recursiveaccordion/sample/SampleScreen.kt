@@ -36,9 +36,9 @@ fun SampleScreen() {
                             expandedIds.add(toggledItem.id)
                         }
                     },
-                    action = { current, isExpanded, onToggle ->
+                    action = { toggledItem, onToggle ->
                         SampleAction(
-                            isExpanded = isExpanded,
+                            isExpanded = toggledItem.id in expandedIds,
                             onClick = onToggle,
                         )
                     },

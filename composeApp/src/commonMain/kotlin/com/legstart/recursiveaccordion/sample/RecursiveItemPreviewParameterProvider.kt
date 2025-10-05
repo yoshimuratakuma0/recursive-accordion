@@ -116,9 +116,9 @@ fun RecursiveItemPreview(
                         expandedIds.add(toggledItem.id)
                     }
                 },
-                action = { current, isExpanded, onToggle ->
+                action = { current, onToggle ->
                     SampleAction(
-                        isExpanded = isExpanded,
+                        isExpanded = current.id in expandedIds,
                         onClick = onToggle,
                     )
                 }
