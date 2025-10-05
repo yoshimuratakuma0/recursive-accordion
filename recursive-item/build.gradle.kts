@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.androidLint)
+    id("com.vanniktech.maven.publish") version "0.34.0"
 }
 
 kotlin {
@@ -100,4 +101,35 @@ kotlin {
         }
     }
 
+}
+
+val artifactVersion: String = "1.0.0"
+mavenPublishing {
+    coordinates("com.legstart", "recursive-accordion", artifactVersion)
+
+    pom {
+        name.set("Recursive Accordion")
+        description.set("A Jetpack Compose library to display recursive items")
+        inceptionYear.set("2025")
+        url.set("https://github.com/yoshimuratakuma0/recursive-accordion")
+        licenses {
+            license {
+                name.set("The Apache License, Version 2.0");
+                url.set("http://www.apache.org/licenses/LICENSE-2.0.txt");
+                distribution.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+            }
+        }
+        developers {
+            developer {
+                id.set("yoshimuratakuma0");
+                name.set("Takuma Yoshimura");
+                url.set("https://github.com/yoshimuratakuma0/")
+            }
+        }
+        scm {
+            url.set("https://github.com/yoshimuratakuma0/recursive-accordion");
+            connection.set("scm:git:git://github.com/yoshimuratakuma0/recursive-accordion.git");
+            developerConnection.set("scm:git:ssh://git@github.com/yoshimuratakuma0/recursive-accordion.git")
+        }
+    }
 }
