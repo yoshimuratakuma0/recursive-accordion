@@ -27,7 +27,7 @@ fun SampleAction(
     ) {
         Icon(
             imageVector = Icons.Default.ArrowDropDown,
-            contentDescription = "Collapse",
+            contentDescription = null,
             tint = Color.Gray,
             modifier = Modifier.rotate(rotation),
         )

@@ -114,8 +114,8 @@ mavenPublishing {
         url.set("https://github.com/yoshimuratakuma0/recursive-accordion")
         licenses {
             license {
-                name.set("The Apache License, Version 2.0");
-                url.set("http://www.apache.org/licenses/LICENSE-2.0.txt");
+                name.set("The Apache License, Version 2.0")
+                url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
                 distribution.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
             }
         }
@@ -127,8 +127,8 @@ mavenPublishing {
             }
         }
         scm {
-            url.set("https://github.com/yoshimuratakuma0/recursive-accordion");
-            connection.set("scm:git:git://github.com/yoshimuratakuma0/recursive-accordion.git");
+            url.set("https://github.com/yoshimuratakuma0/recursive-accordion")
+            connection.set("scm:git:git://github.com/yoshimuratakuma0/recursive-accordion.git")
             developerConnection.set("scm:git:ssh://git@github.com/yoshimuratakuma0/recursive-accordion.git")
         }
     }
