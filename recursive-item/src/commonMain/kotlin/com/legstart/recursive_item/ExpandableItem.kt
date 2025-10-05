@@ -1,4 +1,4 @@
-package com.legstart.recursiveaccordion
+package com.legstart.recursive_item
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.FiniteAnimationSpec
