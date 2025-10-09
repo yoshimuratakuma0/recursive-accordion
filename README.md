@@ -1,4 +1,7 @@
 # RecursiveAccordion
+[Screen_recording_20251010_010405.webm](https://github.com/user-attachments/assets/39a23a45-9e0c-4bd9-b85c-c48aa1045f11)
+
+
 
 Android 向けの再帰的なアコーディオン UI コンポーネントライブラリです。Jetpack Compose
 を使用して、ツリー構造のデータを階層的に表示できます。
